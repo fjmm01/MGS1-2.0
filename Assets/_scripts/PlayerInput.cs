@@ -14,7 +14,7 @@ public class PlayerInput : MonoBehaviour
 
     public CinemachineVirtualCamera topDownCamera, povCamera, cornerCamera;
 
-    public Collider collider1, collider2;
+   
 
     public bool orientToMove = true;
 
@@ -42,10 +42,12 @@ public class PlayerInput : MonoBehaviour
     private float LerpTime = 0;
     private Vector3 LastDirection;
     private Vector3 MovementVector;
-    public bool isCrocuhing;
-    public bool canTakeOver;
+    private bool isCrocuhing;
+    private bool canTakeOver;
     public LayerMask layer2;
-    
+    private Vector3 orientVector;
+    public bool isOnEdge;
+    public Collider coverColl;
 
 
 
@@ -124,7 +126,7 @@ public class PlayerInput : MonoBehaviour
     private void DoOldInputSystemMovement()
     {
         float dist = Vector3.Distance(transform.position, wallEdge.position);
-        Debug.Log(dist);
+        //Debug.Log(dist);
         MovementVector = Vector3.zero;
         if (orientToMove == true)
         {
@@ -146,7 +148,7 @@ public class PlayerInput : MonoBehaviour
                 MovementVector += Vector3.forward;
             }
         }
-        else if(orientToMove == false)
+        else if(orientToMove == false && (orientVector == new Vector3(0,0,1) || orientVector == new Vector3(0,0,-1)))
         {
             if (Input.GetKey(KeyCode.A))
             {
@@ -157,8 +159,20 @@ public class PlayerInput : MonoBehaviour
                 MovementVector += Vector3.left;
             }
         }
-        
-       
+        else if (orientToMove == false && (orientVector == new Vector3(1, 0, 0) || orientVector == new Vector3(-1, 0, 0)))
+        {
+            if (Input.GetKey(KeyCode.W))
+            {
+                MovementVector += Vector3.back;
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                MovementVector += Vector3.forward;
+            }
+        }
+
+
+
 
 
         MovementVector.Normalize();
@@ -206,19 +220,21 @@ public class PlayerInput : MonoBehaviour
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 2, Color.green);
             canTakeOver = true;
             
+            
 
             if (canTakeOver && Input.GetKeyDown(KeyCode.E))
             {
-
-
-               
+                coverColl = GetComponent<Collider>();
+                orientVector = hit.normal;
+                Debug.Log(hit.normal);
                 transform.position = hit.point;
                 
                 transform.rotation = Quaternion.LookRotation(hit.normal);
                 anim.SetLayerWeight(0, 0);
                 anim.SetLayerWeight(2, 1);
                 orientToMove = false;
-
+                Vector3 vdetect = new Vector3(1, 0, 1);
+                
 
                 
                 
