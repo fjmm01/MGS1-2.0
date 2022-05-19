@@ -48,6 +48,7 @@ public class PlayerInput : MonoBehaviour
     private Vector3 orientVector;
     public bool isOnEdge;
     public Collider coverColl;
+    RaycastHit hitEdge;
 
 
 
@@ -150,6 +151,35 @@ public class PlayerInput : MonoBehaviour
         }
         else if(orientToMove == false && (orientVector == new Vector3(0,0,1) || orientVector == new Vector3(0,0,-1)))
         {
+            if (orientVector == new Vector3(0, 0, 1))
+            {
+                if (Physics.Raycast(transform.position, Vector3.back, out hitEdge, 2, layer))
+                {
+                    Debug.DrawRay(transform.position, (Vector3.back) * 2, Color.yellow);
+                    isOnEdge = false;
+                }
+                else
+                {
+                    Debug.DrawRay(transform.position, (Vector3.back) * 2, Color.blue);
+                    isOnEdge = true;
+                }
+            }
+            if(orientVector == new Vector3(0,0,-1))
+            {
+                if (Physics.Raycast(transform.position, Vector3.forward, out hitEdge, 2, layer))
+                {
+                    Debug.DrawRay(transform.position, (Vector3.forward) * 2, Color.yellow);
+                    isOnEdge = false;
+                }
+                else
+                {
+                    Debug.DrawRay(transform.position, (Vector3.forward) * 2, Color.blue);
+                    isOnEdge = true;
+                }
+            }
+
+            
+
             if (Input.GetKey(KeyCode.A))
             {
                 MovementVector += Vector3.right;
@@ -158,6 +188,16 @@ public class PlayerInput : MonoBehaviour
             {
                 MovementVector += Vector3.left;
             }
+            /* float distEdge = Vector3.Distance(transform.position, hitEdge.position);
+            if (distEdge <= 1)
+            {
+                isOnEdge = true;
+            }
+            else
+            {
+                isOnEdge = false;
+            }
+            */ 
         }
         else if (orientToMove == false && (orientVector == new Vector3(1, 0, 0) || orientVector == new Vector3(-1, 0, 0)))
         {
@@ -169,6 +209,16 @@ public class PlayerInput : MonoBehaviour
             {
                 MovementVector += Vector3.forward;
             }
+           /* float distEdge = Vector3.Distance(transform.position, hitEdge.position);
+            if (distEdge <= 1)
+            {
+                isOnEdge = true;
+            }
+            else
+            {
+                isOnEdge = false;
+            }
+           */
         }
 
 
@@ -234,6 +284,16 @@ public class PlayerInput : MonoBehaviour
                 anim.SetLayerWeight(2, 1);
                 orientToMove = false;
                 Vector3 vdetect = new Vector3(1, 0, 1);
+
+
+                
+
+                /*if(NavMesh.FindClosestEdge(transform.position, out hitEdge, NavMesh.AllAreas))
+                {
+                    Debug.Log(hitEdge.position);
+                    
+                }
+                */
                 
 
                 
@@ -256,6 +316,7 @@ public class PlayerInput : MonoBehaviour
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 2, Color.red);
             canTakeOver = false;
             orientToMove = true;
+            isOnEdge = false;
         }
         
 
