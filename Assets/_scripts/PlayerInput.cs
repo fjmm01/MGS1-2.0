@@ -52,6 +52,10 @@ public class PlayerInput : MonoBehaviour
     RaycastHit hitEdge2;
     Vector3 offset3 = new Vector3(0, 0, 1);
     Vector3 offset4 = new Vector3(0, 0, -1);
+    public bool canPassUnder;
+    public NavMeshObstacle obstacle1;
+    public NavMeshObstacle obstacle2;
+
 
 
 
@@ -91,6 +95,7 @@ public class PlayerInput : MonoBehaviour
         Crouching();
         UpdateAnimator();
         PassUnderObstacles();
+        
 
 
 
@@ -166,11 +171,15 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.A))
                     {
                         MovementVector += Vector3.right;
+                        anim.SetFloat("directionX", 1);
                     }
+                    
                     if (Input.GetKey(KeyCode.D))
                     {
                         MovementVector += Vector3.left;
+                        anim.SetFloat("directionX", -1);
                     }
+                   
                 }
                 else if (hitEdge.normal.magnitude == 0)
                 {
@@ -179,7 +188,9 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.D))
                     {
                         MovementVector += Vector3.left;
+                        anim.SetFloat("directionX", -1);
                     }
+                    
 
                 }
                 else if (hitEdge2.normal.magnitude == 0)
@@ -188,7 +199,9 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.A))
                     {
                         MovementVector += Vector3.right;
+                        anim.SetFloat("directionX", 1);
                     }
+                    
                 }
             }
             if (orientVector == new Vector3(0, 0, -1))
@@ -201,10 +214,12 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.A))
                     {
                         MovementVector += Vector3.right;
+                        anim.SetFloat("directionY", 1);
                     }
                     if (Input.GetKey(KeyCode.D))
                     {
                         MovementVector += Vector3.left;
+                        anim.SetFloat("directionY", -1);
                     }
 
                 }
@@ -215,6 +230,7 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.D))
                     {
                         MovementVector += Vector3.left;
+                        anim.SetFloat("directionY", -1);
                     }
 
                 }
@@ -224,6 +240,7 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.A))
                     {
                         MovementVector += Vector3.right;
+                        anim.SetFloat("directionX", 1);
                     }
                 }
             }
@@ -306,6 +323,7 @@ public class PlayerInput : MonoBehaviour
                 else if (hitEdge2.normal.magnitude == 0)
                 {
                     isOnLeftEdge = true;
+                    
                     
                     if (Input.GetKey(KeyCode.S))
                     {
@@ -412,6 +430,9 @@ public class PlayerInput : MonoBehaviour
         anim.SetFloat("Speed", MovementVector.magnitude);
 
         anim.SetBool("IsCrouching", isCrocuhing);
+
+        anim.SetFloat("directionX", MovementVector.x);
+        anim.SetFloat("directionY", MovementVector.z);
     }
 
     private void Crouching()
@@ -429,6 +450,17 @@ public class PlayerInput : MonoBehaviour
 
     public void PassUnderObstacles()
     {
+        RaycastHit hitObj;
+        Vector3 verticalOffset = new Vector3(0, 2, 0);
+        if(Physics.Raycast(transform.position + verticalOffset, transform.TransformDirection(Vector3.forward),out hitObj,2,layer2) && isCrocuhing == true)
+        {
+            canPassUnder = true;
+            obstacle1.enabled = false;
+            obstacle2.enabled = false;
+            
+            
+        }
+        
 
     }
 
