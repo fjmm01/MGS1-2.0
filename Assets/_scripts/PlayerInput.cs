@@ -450,22 +450,32 @@ public class PlayerInput : MonoBehaviour
 
     public void PassUnderObstacles()
     {
-        RaycastHit hitObj;
         Vector3 verticalOffset = new Vector3(0, 2, 0);
-        if(Physics.Raycast(transform.position + verticalOffset, transform.TransformDirection(Vector3.forward),out hitObj,2,layer2) && isCrocuhing == true)
+        RaycastHit hitObj;
+
+        Physics.Raycast(transform.position + verticalOffset, transform.TransformDirection(Vector3.forward), out hitObj, 2, layer2);
+        Debug.DrawRay(transform.position + verticalOffset, transform.TransformDirection(Vector3.forward) * 2, Color.blue);
+       // Physics.Raycast(transform.position, transform.TransformDirection(Vector3.up), out hitObj, 2, layer2);
+        
+        if(hitObj.normal ==new Vector3(0, 0, 1)  && isCrocuhing == true)
         {
+            isCrocuhing = true;
             canPassUnder = true;
             obstacle1.enabled = false;
             obstacle2.enabled = false;
-            
-            
         }
         
+        
+        
+
+
 
     }
 
-
     
+
+
+
 }
 
 
