@@ -55,6 +55,7 @@ public class PlayerInput : MonoBehaviour
     public bool canPassUnder;
     public NavMeshObstacle obstacle1;
     public NavMeshObstacle obstacle2;
+    public AudioSource whistle;
 
     
 
@@ -74,7 +75,7 @@ public class PlayerInput : MonoBehaviour
          PlayerActionMap.Enable();
          InputActions.Enable();
         */
-
+        
 
     }
 
@@ -332,6 +333,10 @@ public class PlayerInput : MonoBehaviour
                     }
 
                 }
+            }
+            if(Input.GetKey(KeyCode.Q))
+            {
+                whistle.Play();
             }
         }
 
