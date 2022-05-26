@@ -11,10 +11,16 @@ public class CinemachineCamera : MonoBehaviour
     private PlayerInput playerInput;
     void Awake()
     {
-        camCen.enabled = true;
+        /*camCen.enabled = true;
         PovCam.enabled = false;
         cornerCam.enabled = false;
+        */
         playerInput = GetComponent<PlayerInput>();
+        
+
+        camCen.Priority = 10;
+        PovCam.Priority = 0;
+        cornerCam.Priority = 0;
     }
 
     
@@ -27,7 +33,7 @@ public class CinemachineCamera : MonoBehaviour
 
     private void CameraSwitcher()
     {
-        if(playerInput.isOnLeftEdge == true || playerInput.isOnRightEdge == true)
+        if(playerInput.isOnLeftEdge == true || playerInput.isOnRightEdge)
         {
             camCen.Priority = 0;
             cornerCam.Priority = 10;
