@@ -11,6 +11,8 @@ public class AI : MonoBehaviour
     public Transform player;
     State currentState;
 
+    
+
 
     // Start is called before the first frame update
     void Start()

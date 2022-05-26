@@ -6,7 +6,7 @@ public interface IObserver
 {
     void update(bool encontrado);
 }
-public class Observer : IObserver
+public class Observer :  IObserver
 {
     public string UserName { get; set; }
 
