@@ -13,7 +13,7 @@ public class CinemachineCamera : MonoBehaviour
     {
         camCen.enabled = true;
         PovCam.enabled = false;
-        cornerCam.enabled = true;
+        cornerCam.enabled = false;
         playerInput = GetComponent<PlayerInput>();
     }
 
@@ -29,14 +29,15 @@ public class CinemachineCamera : MonoBehaviour
     {
         if(playerInput.isOnLeftEdge == true || playerInput.isOnRightEdge == true)
         {
+            camCen.Priority = 0;
+            cornerCam.Priority = 10;
+            
            
-            camCen.enabled = false;
-            cornerCam.enabled = true;
         }
         else
         {
-            cornerCam.enabled = false;
-            camCen.enabled = true;
+            cornerCam.Priority = 0;
+            camCen.Priority = 10;
             
         }
 

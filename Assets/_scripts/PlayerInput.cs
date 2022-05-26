@@ -12,7 +12,7 @@ using Cinemachine;
 public class PlayerInput : MonoBehaviour
 {
 
-    public CinemachineVirtualCamera topDownCamera, povCamera, cornerCamera;
+   
 
 
 
@@ -451,35 +451,40 @@ public class PlayerInput : MonoBehaviour
 
     public void PassUnderObstacles()
     {
-        Vector3 verticalOffset = new Vector3(0, 2, 0);
+        Vector3 verticalOffset = new Vector3(0, 4, 0);
         RaycastHit hitObj;
-        //RaycastHit hitVertical;
+        RaycastHit hitVertical;
 
-        Physics.Raycast(transform.position + verticalOffset, transform.TransformDirection(Vector3.forward), out hitObj, 0.5f, layer2);
+        Physics.Raycast(transform.position + verticalOffset, transform.TransformDirection(Vector3.forward), out hitObj, 1f, layer2);
         Debug.DrawRay(transform.position + verticalOffset, transform.TransformDirection(Vector3.forward) * 2, Color.blue);
-       // Physics.Raycast(transform.position, transform.TransformDirection(Vector3.up), out hitVertical, 3f, layer2);
-       // Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.up) * 3, Color.blue);
-        //Debug.Log("Debajo objeto" + hitVertical.normal);
-        // Physics.Raycast(transform.position, transform.TransformDirection(Vector3.up), out hitObj, 2, layer2);
+        
+        Physics.Raycast(transform.position+ verticalOffset, transform.TransformDirection(Vector3.back), out hitVertical, 0.5f, layer2);
+        Debug.DrawRay(transform.position + verticalOffset, transform.TransformDirection(Vector3.back) * 0.5f, Color.blue);
+        
+        
+        //Physics.Raycast(transform.position, transform.TransformDirection(Vector3.up), out hitObj, 2, layer2);
 
-        if (hitObj.normal ==new Vector3(0, 0, 1)  && isCrocuhing == true)
+        if (hitObj.normal != new Vector3(0, 0, 0) && isCrocuhing == true)
         {
-            
             canPassUnder = true;
             obstacle1.enabled = false;
             obstacle2.enabled = false;
+
         }
-       
-
-
-
-
-
-
+        if(hitVertical.normal != new Vector3(0,0,0))
+        {
+            canPassUnder = false;
+            obstacle1.enabled = true;
+            obstacle2.enabled = true;
+        }
+        
+        
 
 
     }
 
+
+    
     
 
 
