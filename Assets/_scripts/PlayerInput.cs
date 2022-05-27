@@ -18,7 +18,7 @@ public class PlayerInput : MonoBehaviour
 
     public bool orientToMove = true;
 
-    public Transform wallEdge;
+    
 
     /*  [SerializeField]
       private InputActionAsset InputActions;
@@ -50,12 +50,14 @@ public class PlayerInput : MonoBehaviour
     public Collider coverColl;
     RaycastHit hitEdge;
     RaycastHit hitEdge2;
+    [SerializeField]
     Vector3 offset3 = new Vector3(0, 0, 1);
+    [SerializeField]
     Vector3 offset4 = new Vector3(0, 0, -1);
     public bool canPassUnder;
     public NavMeshObstacle obstacle1;
     public NavMeshObstacle obstacle2;
-    public AudioSource whistle;
+    private AudioSource whistle;
 
     
 
@@ -75,7 +77,7 @@ public class PlayerInput : MonoBehaviour
          PlayerActionMap.Enable();
          InputActions.Enable();
         */
-        
+        whistle = GetComponent<AudioSource>();
 
     }
 
@@ -136,7 +138,7 @@ public class PlayerInput : MonoBehaviour
     */
     private void DoOldInputSystemMovement()
     {
-        float dist = Vector3.Distance(transform.position, wallEdge.position);
+        
         //Debug.Log(dist);
         MovementVector = Vector3.zero;
         if (orientToMove == true)
@@ -187,10 +189,12 @@ public class PlayerInput : MonoBehaviour
                 {
 
                     isOnLeftEdge = true;
+                    Agent.speed = 0;
                     if (Input.GetKey(KeyCode.D))
                     {
                         MovementVector += Vector3.left;
                         anim.SetFloat("directionX", -1);
+
                     }
                     
 
@@ -198,10 +202,12 @@ public class PlayerInput : MonoBehaviour
                 else if (hitEdge2.normal.magnitude == 0)
                 {
                     isOnRightEdge = true;
+                    Agent.speed = 0;
                     if (Input.GetKey(KeyCode.A))
                     {
                         MovementVector += Vector3.right;
                         anim.SetFloat("directionX", 1);
+                        Agent.speed = 5;
                     }
                     
                 }
@@ -216,12 +222,13 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.A))
                     {
                         MovementVector += Vector3.right;
-                        anim.SetFloat("directionY", 1);
+                        anim.SetFloat("directionX", 1);
                     }
                     if (Input.GetKey(KeyCode.D))
                     {
                         MovementVector += Vector3.left;
-                        anim.SetFloat("directionY", -1);
+                        anim.SetFloat("directionX", -1);
+
                     }
 
                 }
@@ -229,20 +236,24 @@ public class PlayerInput : MonoBehaviour
                 {
 
                     isOnLeftEdge = true;
+                    Agent.speed = 0;
                     if (Input.GetKey(KeyCode.D))
                     {
                         MovementVector += Vector3.left;
-                        anim.SetFloat("directionY", -1);
+                        anim.SetFloat("directionX", 1);
+                        Agent.speed = 5;
                     }
 
                 }
                 else if (hitEdge2.normal.magnitude == 0)
                 {
                     isOnRightEdge = true;
+                    Agent.speed = 0;
                     if (Input.GetKey(KeyCode.A))
                     {
                         MovementVector += Vector3.right;
-                        anim.SetFloat("directionX", 1);
+                        anim.SetFloat("directionX", -1);
+                        Agent.speed = 5;
                     }
                 }
             }
@@ -280,6 +291,7 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.W))
                     {
                         MovementVector += Vector3.back;
+                        anim.SetFloat("directionY", 1);
                     }
                 }
                 else if (hitEdge2.normal.magnitude == 0)
@@ -288,6 +300,7 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.S))
                     {
                         MovementVector += Vector3.forward;
+                        anim.SetFloat("directionY", -1);
                     }
                 }
 
@@ -318,6 +331,7 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.W))
                     {
                         MovementVector += Vector3.back;
+                        anim.SetFloat("directionY", -1);
                     }
 
 
@@ -330,14 +344,12 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.S))
                     {
                         MovementVector += Vector3.forward;
+                        anim.SetFloat("directionY", 1);
                     }
 
                 }
             }
-            if(Input.GetKey(KeyCode.Q))
-            {
-                whistle.Play();
-            }
+            
         }
 
 
@@ -405,10 +417,19 @@ public class PlayerInput : MonoBehaviour
                 orientToMove = false;
                 Vector3 vdetect = new Vector3(1, 0, 1);
 
+                if (Input.GetKey(KeyCode.Q))
+                {
+
+                    if (!whistle.isPlaying)
+                    {
+                        whistle.Play();
+                        Debug.Log(whistle.isPlaying);
+                    }
+
+                }
 
 
 
-                
             }
 
 

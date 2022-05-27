@@ -10,7 +10,7 @@ public class AI : MonoBehaviour
     Animator anim;
     public Transform player;
     State currentState;
-
+    
     
 
 
