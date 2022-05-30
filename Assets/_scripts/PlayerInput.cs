@@ -175,13 +175,13 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.A))
                     {
                         MovementVector += Vector3.right;
-                        anim.SetFloat("directionX", 1);
+                        //anim.SetFloat("directionX", 1);
                     }
                     
                     if (Input.GetKey(KeyCode.D))
                     {
                         MovementVector += Vector3.left;
-                        anim.SetFloat("directionX", -1);
+                        //anim.SetFloat("directionX", -1);
                     }
                    
                 }
@@ -193,7 +193,7 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.D))
                     {
                         MovementVector += Vector3.left;
-                        anim.SetFloat("directionX", -1);
+                        
 
                     }
                     
@@ -206,7 +206,7 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.A))
                     {
                         MovementVector += Vector3.right;
-                        anim.SetFloat("directionX", 1);
+                        
                         Agent.speed = 5;
                     }
                     
@@ -222,12 +222,12 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.A))
                     {
                         MovementVector += Vector3.right;
-                        anim.SetFloat("directionX", 1);
+                        //anim.SetFloat("directionX", -1);
                     }
                     if (Input.GetKey(KeyCode.D))
                     {
                         MovementVector += Vector3.left;
-                        anim.SetFloat("directionX", -1);
+                        //anim.SetFloat("directionX", 1);
 
                     }
 
@@ -240,7 +240,7 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.D))
                     {
                         MovementVector += Vector3.left;
-                        anim.SetFloat("directionX", 1);
+                        
                         Agent.speed = 5;
                     }
 
@@ -252,7 +252,7 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.A))
                     {
                         MovementVector += Vector3.right;
-                        anim.SetFloat("directionX", -1);
+                        
                         Agent.speed = 5;
                     }
                 }
@@ -279,28 +279,35 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.W))
                     {
                         MovementVector += Vector3.back;
+                        //anim.SetFloat("directionY", -1);
                     }
                     if (Input.GetKey(KeyCode.S))
                     {
                         MovementVector += Vector3.forward;
+                        //anim.SetFloat("directionY", 1);
                     }
                 }
                 else if (hitEdge.normal.magnitude == 0)
                 {
                     isOnLeftEdge = true;
+                    Agent.speed = 0;
                     if (Input.GetKey(KeyCode.W))
                     {
                         MovementVector += Vector3.back;
-                        anim.SetFloat("directionY", 1);
+                        Agent.speed = 5;
+
+
                     }
                 }
                 else if (hitEdge2.normal.magnitude == 0)
                 {
                     isOnRightEdge = true;
+                    Agent.speed = 0;
                     if (Input.GetKey(KeyCode.S))
                     {
                         MovementVector += Vector3.forward;
-                        anim.SetFloat("directionY", -1);
+                        Agent.speed = 5;
+
                     }
                 }
 
@@ -319,19 +326,23 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.W))
                     {
                         MovementVector += Vector3.back;
+                        //anim.SetFloat("directionY", 1);
                     }
                     if (Input.GetKey(KeyCode.S))
                     {
                         MovementVector += Vector3.forward;
+                        //anim.SetFloat("directionY", -1);
                     }
                 }
                 else if (hitEdge.normal.magnitude == 0)
                 {
                     isOnRightEdge = true;
+                    Agent.speed = 0;
                     if (Input.GetKey(KeyCode.W))
                     {
                         MovementVector += Vector3.back;
-                        anim.SetFloat("directionY", -1);
+                        Agent.speed = 5;
+
                     }
 
 
@@ -339,12 +350,13 @@ public class PlayerInput : MonoBehaviour
                 else if (hitEdge2.normal.magnitude == 0)
                 {
                     isOnLeftEdge = true;
-                    
-                    
+                    Agent.speed = 0;
+
                     if (Input.GetKey(KeyCode.S))
                     {
                         MovementVector += Vector3.forward;
-                        anim.SetFloat("directionY", 1);
+                        Agent.speed = 5;
+
                     }
 
                 }
@@ -438,6 +450,7 @@ public class PlayerInput : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.E))
         {
             Vector3 origin = new Vector3(0, 0, 0);
+            Agent.speed = 5;
             transform.eulerAngles = origin;
             anim.SetLayerWeight(2, 0);
             anim.SetLayerWeight(0, 1);
@@ -458,6 +471,7 @@ public class PlayerInput : MonoBehaviour
 
         anim.SetBool("IsCrouching", isCrocuhing);
 
+        if(orientVector == )
         anim.SetFloat("directionX", MovementVector.x);
         anim.SetFloat("directionY", MovementVector.z);
     }
@@ -493,12 +507,14 @@ public class PlayerInput : MonoBehaviour
         if (hitObj.normal != new Vector3(0, 0, 0) && isCrocuhing == true)
         {
             canPassUnder = true;
+            
             obstacle1.enabled = false;
             obstacle2.enabled = false;
 
         }
         if(hitVertical.normal != new Vector3(0,0,0))
         {
+            
             canPassUnder = false;
             obstacle1.enabled = true;
             obstacle2.enabled = true;

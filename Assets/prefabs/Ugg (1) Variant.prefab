@@ -13,7 +13,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5634351214200671730, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
       propertyPath: m_Name
-      value: Ugg (1)
+      value: Ugg (1) Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8676859005578919905, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
       propertyPath: m_RootOrder
@@ -59,5 +59,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1377064016270956327, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}

@@ -24,7 +24,7 @@ public class State
     protected NavMeshAgent agent;
 
     float visDist = 10.0f;
-    float visAngle = 30.0f;
+    float visAngle = 60.0f;
     float shootDist = 7.0f;
 
 
@@ -119,7 +119,7 @@ public class Patrol: State
             : base(_npc, _agent, _anim, _player)
     {
         name = STATE.PATROL;
-        agent.speed = 2;
+        agent.speed = 1;
         agent.isStopped = false;
     }
 
@@ -173,7 +173,7 @@ public class Pursue: State
             : base(_npc, _agent, _anim, _player)
     {
         name=STATE.PURSUE;
-        agent.speed = 5;
+        agent.speed = 3;
         agent.isStopped = false;
     }
     public override void Enter()
