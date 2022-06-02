@@ -16,10 +16,7 @@ public class PlayerInput : MonoBehaviour
 
 
 
-    public bool orientToMove = true;
-
-    
-
+    private bool orientToMove = true;
     /*  [SerializeField]
       private InputActionAsset InputActions;
       private InputActionMap PlayerActionMap;
@@ -47,7 +44,7 @@ public class PlayerInput : MonoBehaviour
     public LayerMask layer2;
     private Vector3 orientVector;
     public bool isOnLeftEdge, isOnRightEdge;
-    public Collider coverColl;
+    //public Collider coverColl;
     RaycastHit hitEdge;
     RaycastHit hitEdge2;
     [SerializeField]
@@ -58,12 +55,9 @@ public class PlayerInput : MonoBehaviour
     public NavMeshObstacle obstacle1;
     public NavMeshObstacle obstacle2;
     private AudioSource whistle;
-
-    
-
-
-
     public LayerMask layer;
+
+
     private void Awake()
     {
         Agent = GetComponent<NavMeshAgent>();
@@ -139,8 +133,9 @@ public class PlayerInput : MonoBehaviour
     private void DoOldInputSystemMovement()
     {
         
-        //Debug.Log(dist);
+        
         MovementVector = Vector3.zero;
+        //orientToMove nos dice si podemos movernos libremente(true) o si solo podemos movernos en ciertas direcciones(false)
         if (orientToMove == true)
         {
 
@@ -175,13 +170,13 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.A))
                     {
                         MovementVector += Vector3.right;
-                        //anim.SetFloat("directionX", 1);
+                        
                     }
                     
                     if (Input.GetKey(KeyCode.D))
                     {
                         MovementVector += Vector3.left;
-                        //anim.SetFloat("directionX", -1);
+                        
                     }
                    
                 }
@@ -222,12 +217,12 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.A))
                     {
                         MovementVector += Vector3.right;
-                        //anim.SetFloat("directionX", -1);
+                       
                     }
                     if (Input.GetKey(KeyCode.D))
                     {
                         MovementVector += Vector3.left;
-                        //anim.SetFloat("directionX", 1);
+                        
 
                     }
 
@@ -279,12 +274,12 @@ public class PlayerInput : MonoBehaviour
                     if (Input.GetKey(KeyCode.W))
                     {
                         MovementVector += Vector3.back;
-                        //anim.SetFloat("directionY", -1);
+                        
                     }
                     if (Input.GetKey(KeyCode.S))
                     {
                         MovementVector += Vector3.forward;
-                        //anim.SetFloat("directionY", 1);
+                        
                     }
                 }
                 else if (hitEdge.normal.magnitude == 0)
@@ -471,9 +466,17 @@ public class PlayerInput : MonoBehaviour
 
         anim.SetBool("IsCrouching", isCrocuhing);
 
-        if(orientVector == )
-        anim.SetFloat("directionX", MovementVector.x);
-        anim.SetFloat("directionY", MovementVector.z);
+        if(orientVector == new Vector3 (0,0,1) || orientVector == new Vector3 (-1,0,0))
+        {
+            anim.SetFloat("directionX", MovementVector.x);
+            anim.SetFloat("directionY", MovementVector.z);
+        }
+        else if(orientVector == new Vector3 (0,0,-1) || orientVector == new Vector3(1,0,0))
+        {
+            anim.SetFloat("directionX", -MovementVector.x);
+            anim.SetFloat("directionY", -MovementVector.z);
+        }
+        
     }
 
     private void Crouching()
@@ -502,7 +505,7 @@ public class PlayerInput : MonoBehaviour
         Debug.DrawRay(transform.position + verticalOffset, transform.TransformDirection(Vector3.back) * 0.5f, Color.blue);
         
         
-        //Physics.Raycast(transform.position, transform.TransformDirection(Vector3.up), out hitObj, 2, layer2);
+        
 
         if (hitObj.normal != new Vector3(0, 0, 0) && isCrocuhing == true)
         {

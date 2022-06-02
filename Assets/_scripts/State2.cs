@@ -22,9 +22,10 @@ public class State2
     protected Transform player2;
     protected State2 nextState2;
     protected NavMeshAgent agent2;
+    RaycastHit hitPlayer;
 
     float visDist = 10.0f;
-    float visAngle = 60.0f;
+    float visAngle = 180.0f;
     float shootDist = 7.0f;
 
 
@@ -57,8 +58,9 @@ public class State2
     {
         Vector3 direction = player2.position - npc2.transform.position;
         float angle = Vector3.Angle(direction, npc2.transform.forward);
+        Physics.Raycast(npc2.transform.position, direction, out hitPlayer);
 
-        if (direction.magnitude < visDist && angle < visAngle)
+        if (direction.magnitude < visDist && angle < visAngle && hitPlayer.transform.tag.Equals("Player"))
         {
             return true;
         }

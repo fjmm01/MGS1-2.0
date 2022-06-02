@@ -10,6 +10,7 @@ public class ShowWeapon : MonoBehaviour
     private Animator anim;
 
     public bool showPistol;
+    public AudioSource gunShot;
 
     private void Start()
     {
@@ -20,25 +21,7 @@ public class ShowWeapon : MonoBehaviour
 
     private void Update()
     {
-        if(showPistol == false)
-        {
-            pistol.SetActive(false);
-        }
-        if(showPistol == true)
-        {
-            pistol.SetActive(true);
-        }
-
-        if(Input.GetKeyDown(KeyCode.Alpha1) && showPistol == false)
-        {
-            showPistol = true;
-            
-        }
-        
-        if(Input.GetKeyDown(KeyCode.Alpha2) && showPistol == true)
-        {
-            showPistol = false;
-        }
+        ShowGun();
         UpdateAnimator();
     }
 
@@ -54,6 +37,37 @@ public class ShowWeapon : MonoBehaviour
         {
             anim.SetLayerWeight(1, 0);
             anim.SetLayerWeight(0, 1);
+        }
+    }
+
+    private void ShowGun()
+    {
+        if (showPistol == false)
+        {
+            pistol.SetActive(false);
+        }
+        if (showPistol == true)
+        {
+            pistol.SetActive(true);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1) && showPistol == false)
+        {
+            showPistol = true;
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2) && showPistol == true)
+        {
+            showPistol = false;
+        }
+    }
+
+    private void Shoot()
+    {
+        if(Input.GetButton("Fire1"))
+        {
+            gunShot.Play();
         }
     }
 }
