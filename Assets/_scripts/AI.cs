@@ -10,6 +10,8 @@ public class AI : MonoBehaviour
     Animator anim;
     public Transform player;
     State currentState;
+    public Transform shootingPoint;
+    public PlayerHealthSystem playerHealth;
     
     
 
@@ -19,7 +21,7 @@ public class AI : MonoBehaviour
     {
         agent = this.GetComponent<NavMeshAgent>();
         anim = this.GetComponent<Animator>();
-        currentState = new Idle(this.gameObject, agent, anim, player);
+        currentState = new Idle(this.gameObject, agent, anim, player,shootingPoint, playerHealth);
     }
 
     // Update is called once per frame

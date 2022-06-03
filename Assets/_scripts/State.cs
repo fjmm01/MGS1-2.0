@@ -23,19 +23,27 @@ public class State
     protected State nextState;
     protected NavMeshAgent agent;
     RaycastHit hitPlayer;
+    protected Transform shootingPoint;
+    protected PlayerHealthSystem playerhealth;
 
     float visDist = 10.0f;
     float visAngle = 180.0f;
     float shootDist = 7.0f;
 
+    public float fireRate = 1f;
+    public float nextFire;
+    
 
-    public State(GameObject _npc,NavMeshAgent _agent, Animator _anim, Transform _player)
+
+    public State(GameObject _npc,NavMeshAgent _agent, Animator _anim, Transform _player, Transform _shootingPoint, PlayerHealthSystem _playerhealth)
     {
         npc = _npc;
         agent = _agent;
         anim = _anim;
         stage = EVENT.ENTER;
         player = _player;
+        shootingPoint = _shootingPoint;
+        playerhealth = _playerhealth;
     }
 
     public virtual void Enter() { stage = EVENT.UPDATE; }
@@ -80,8 +88,8 @@ public class State
 
 public class Idle: State
 {
-    public Idle(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player)
-                :base(_npc,_agent,_anim,_player)
+    public Idle(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player, Transform _shootingPoint, PlayerHealthSystem _playerHealth)
+                :base(_npc,_agent,_anim,_player,_shootingPoint, _playerHealth)
     {
         name = STATE.IDLE;
     }
@@ -97,12 +105,12 @@ public class Idle: State
     {
         if(CanSeePlayer())
         {
-            nextState = new Pursue(npc, agent, anim, player);
+            nextState = new Pursue(npc, agent, anim, player, shootingPoint, playerhealth);
             stage = EVENT.EXIT;
         }
         else if(Random.Range(0,100) < 10)
         {
-            nextState = new Patrol(npc, agent, anim, player);
+            nextState = new Patrol(npc, agent, anim, player, shootingPoint, playerhealth);
             stage = EVENT.EXIT;
         }
         
@@ -117,8 +125,8 @@ public class Idle: State
 public class Patrol: State
 {
     int currentIndex = -1;
-    public Patrol(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player)
-            : base(_npc, _agent, _anim, _player)
+    public Patrol(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player, Transform _shootingPoint, PlayerHealthSystem _playerHealth)
+            : base(_npc, _agent, _anim, _player, _shootingPoint, _playerHealth)
     {
         name = STATE.PATROL;
         agent.speed = 1;
@@ -156,9 +164,10 @@ public class Patrol: State
 
         if (CanSeePlayer())
         {
-            nextState = new Pursue(npc, agent, anim, player);
+            nextState = new Pursue(npc, agent, anim, player, shootingPoint, playerhealth);
             stage = EVENT.EXIT;
         }
+
 
     }
 
@@ -171,8 +180,8 @@ public class Patrol: State
 
 public class Pursue: State
 {
-    public Pursue(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player)
-            : base(_npc, _agent, _anim, _player)
+    public Pursue(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player, Transform _shootingPoint, PlayerHealthSystem _playerHealth)
+            : base(_npc, _agent, _anim, _player, _shootingPoint, _playerHealth)
     {
         name=STATE.PURSUE;
         agent.speed = 3;
@@ -190,12 +199,12 @@ public class Pursue: State
         {
             if(CanAttackPlayer())
             {
-                nextState = new Attack(npc, agent, anim, player);
+                nextState = new Attack(npc, agent, anim, player,shootingPoint, playerhealth);
                 stage = EVENT.EXIT; 
             }
             else if(!CanSeePlayer())
             {
-                nextState = new Patrol(npc, agent, anim, player);
+                nextState = new Patrol(npc, agent, anim, player, shootingPoint, playerhealth);
                 stage = EVENT.EXIT;
             }
         }
@@ -213,8 +222,8 @@ public class Attack : State
     float rotationSpeed = 2;
     AudioSource shoot;
 
-    public Attack(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player)
-            : base(_npc, _agent, _anim, _player)
+    public Attack(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player, Transform _shootingPoint, PlayerHealthSystem _playerHealth)
+            : base(_npc, _agent, _anim, _player,_shootingPoint, _playerHealth)
     {
         name = STATE.ATTACK;
         shoot = _npc.GetComponent<AudioSource>();
@@ -234,14 +243,34 @@ public class Attack : State
         Vector3 direction = player.position - npc.transform.position;
         float angle = Vector3.Angle(direction, npc.transform.forward);
         direction.y = 0;
+        
+        
 
+        
         npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * rotationSpeed);
 
         if(!CanAttackPlayer())
         {
-            nextState = new Idle(npc, agent, anim, player);
+            nextState = new Idle(npc, agent, anim, player, shootingPoint, playerhealth);
             stage = EVENT.EXIT;
         }
+
+        RaycastHit bullet;
+
+        Physics.Raycast(shootingPoint.transform.position, direction, out bullet);
+        if (bullet.transform.tag.Equals("Player") && Time.time > nextFire)
+        {
+            nextFire = Time.time + fireRate;
+            playerhealth.currentHP -= 5;
+            Debug.Log("TE HE DADO");
+             if (playerhealth.currentHP == 0f)
+             {
+                nextState = new Idle(npc, agent, anim, player, shootingPoint, playerhealth);
+                stage = EVENT.EXIT;
+             }
+
+        }
+       
     }
 
     public override void Exit()

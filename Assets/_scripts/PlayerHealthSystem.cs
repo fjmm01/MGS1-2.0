@@ -9,8 +9,8 @@ public class PlayerHealthSystem : MonoBehaviour
     [SerializeField]
     float maxHP;
 
-    [SerializeField]
-    float currentHP;
+    
+    public float currentHP;
 
     private Animator anim;
 
