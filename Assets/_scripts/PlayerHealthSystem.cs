@@ -13,9 +13,11 @@ public class PlayerHealthSystem : MonoBehaviour
     public float currentHP;
 
     private Animator anim;
+   
 
     void Awake()
     {
+        
         currentHP = maxHP;
         anim = GetComponentInChildren<Animator>();
     }
@@ -31,7 +33,7 @@ public class PlayerHealthSystem : MonoBehaviour
     {
         anim.SetFloat("Health", currentHP); 
 
-
+        
 
 
 
