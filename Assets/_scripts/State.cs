@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class State 
+public class State : EnemyObservable
 {
+
+
     public enum STATE
     {
         IDLE,PATROL,PURSUE,ATTACK
@@ -32,9 +34,8 @@ public class State
 
     public float fireRate = 1f;
     public float nextFire;
-    
 
-
+   
     public State(GameObject _npc,NavMeshAgent _agent, Animator _anim, Transform _player, Transform _shootingPoint, PlayerHealthSystem _playerhealth)
     {
         npc = _npc;
@@ -44,6 +45,8 @@ public class State
         player = _player;
         shootingPoint = _shootingPoint;
         playerhealth = _playerhealth;
+
+        EnemyCallbackAction += Notify;
     }
 
     public virtual void Enter() { stage = EVENT.UPDATE; }
@@ -84,7 +87,16 @@ public class State
         }
         return false;
     }
-    
+
+    public override void Notify(bool value)
+    {
+        // Llamo al estado Persue
+
+        nextState = new Pursue(npc, agent, anim, player, shootingPoint, playerhealth);
+        stage = EVENT.EXIT;
+
+        Debug.Log("***** Me han llamado para perseguir al jugador. " + name);
+    }
 }
 
 public class Idle: State
@@ -104,6 +116,7 @@ public class Idle: State
 
     public override void Update()
     {
+
         if(CanSeePlayer())
         {
             nextState = new Pursue(npc, agent, anim, player, shootingPoint, playerhealth);
@@ -153,6 +166,8 @@ public class Patrol: State
 
     public override void Update()
     {
+
+        
         if(agent.remainingDistance < 1)
         {
             if (currentIndex >= GameEnvironment.Singleton.CheckPoints.Count - 1)
@@ -218,10 +233,12 @@ public class Pursue: State
     }
 }
 
-public class Attack : State
+public class Attack : State, IObservable<float>
 {
     float rotationSpeed = 2;
     AudioSource shoot;
+
+    bool toggle = false;
 
     public Attack(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player, Transform _shootingPoint, PlayerHealthSystem _playerHealth)
             : base(_npc, _agent, _anim, _player,_shootingPoint, _playerHealth)
@@ -258,27 +275,46 @@ public class Attack : State
 
         RaycastHit bullet;
 
+
+       
         Physics.Raycast(shootingPoint.transform.position, direction, out bullet);
         if (bullet.transform.tag.Equals("Player") && Time.time > nextFire)
         {
             nextFire = Time.time + fireRate;
-            playerhealth.currentHP -= 5;
-            Debug.Log("TE HE DADO");
-             if (playerhealth.currentHP == 0f)
+
+            //playerhealth.currentHP -= 5;
+
+            if(!toggle)
+            {
+                Notify(5);
+                toggle = true;
+            }
+
+
+             //Debug.Log("TE HE DADO");
+             if (playerhealth.CurrentHP == 0f)
              {
                 nextState = new Idle(npc, agent, anim, player, shootingPoint, playerhealth);
                 stage = EVENT.EXIT;
              }
 
         }
-       
+
+         
     }
 
     public override void Exit()
     {
+        toggle = false;
+
         anim.ResetTrigger("isShooting");
         shoot.Stop();
         base.Exit();
     }
 
+    public void Notify(float value)
+    {
+        PlayerHealthSystem.UpdateHPAction.Invoke(value);
+        EnemyCallbackAction.Invoke(true);
+    }
 }

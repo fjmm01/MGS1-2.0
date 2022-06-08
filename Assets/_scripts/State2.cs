@@ -3,8 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+
+// CLASE GENERAL BASE : IObservable
+//{
+    //canSeePlayer
+    //Notify() -> State.PERSUE;
+
+//}
+
+// STATE2 : GENERAL BASE
+
 public class State2 
 {
+    // public bool canseePlayer;
+
     public enum STATE
     {
         IDLE, PATROL, PURSUE, ATTACK
@@ -39,7 +51,7 @@ public class State2
     }
 
     public virtual void Enter() { stage2 = EVENT.UPDATE; }
-    public virtual void Update() { stage2 = EVENT.UPDATE; }
+    public virtual void  Update() { stage2 = EVENT.UPDATE; }
     public virtual void Exit() { stage2 = EVENT.EXIT; }
 
     public State2 Process()
@@ -95,7 +107,7 @@ public class Idle2 : State2
 
     public override void Update()
     {
-        if (CanSeePlayer())
+        if (CanSeePlayer()) // var: canSeePlayer 
         {
             nextState2 = new Pursue2(npc2, agent2, anim2, player2);
             stage2 = EVENT.EXIT;
@@ -250,4 +262,10 @@ public class Attack2 : State2
         shoot.Stop();
         base.Exit();
     }
+    
+
+    // Notify(bool value)
+    //{
+    //  canseeplayer = value;
+    //}
 }

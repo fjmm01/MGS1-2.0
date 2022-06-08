@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class GameEnvironment 
+public sealed class GameEnvironment
 {
 
     private static GameEnvironment instance;

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Checkpoint
   - Ruta2
+  - Enemy
   layers:
   - Default
   - TransparentFX
