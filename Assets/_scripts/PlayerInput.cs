@@ -54,7 +54,7 @@ public class PlayerInput : MonoBehaviour
     public bool canPassUnder;
     public NavMeshObstacle obstacle1;
     public NavMeshObstacle obstacle2;
-    private AudioSource whistle;
+    public AudioSource whistle;
     public LayerMask layer;
 
 
@@ -71,7 +71,7 @@ public class PlayerInput : MonoBehaviour
          PlayerActionMap.Enable();
          InputActions.Enable();
         */
-        whistle = GetComponent<AudioSource>();
+        //whistle = GetComponent<AudioSource>();
 
     }
 
@@ -93,6 +93,7 @@ public class PlayerInput : MonoBehaviour
         Crouching();
         UpdateAnimator();
         PassUnderObstacles();
+        makeSounds();
         
 
 
@@ -423,20 +424,6 @@ public class PlayerInput : MonoBehaviour
                 anim.SetLayerWeight(2, 1);
                 orientToMove = false;
                 Vector3 vdetect = new Vector3(1, 0, 1);
-
-                if (Input.GetKey(KeyCode.Q))
-                {
-
-                    if (!whistle.isPlaying)
-                    {
-                        whistle.Play();
-                        Debug.Log(whistle.isPlaying);
-                    }
-
-                }
-
-
-
             }
 
 
@@ -526,6 +513,16 @@ public class PlayerInput : MonoBehaviour
         
 
 
+    }
+
+    public void makeSounds()
+    {
+        if (Input.GetKey(KeyCode.Alpha3) && orientToMove == false)
+        {
+
+            whistle.Play();
+
+        }
     }
 
 

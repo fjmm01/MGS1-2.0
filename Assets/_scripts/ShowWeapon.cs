@@ -12,6 +12,11 @@ public class ShowWeapon : MonoBehaviour
     public bool showPistol;
     public AudioSource gunShot;
 
+    public EnemyHealthSystem enemyHealthSystem;
+    public Transform playerShootingPoint;
+    public float nextFire;
+    public float fireRate;
+
     private void Start()
     {
         showPistol = false;
@@ -23,6 +28,7 @@ public class ShowWeapon : MonoBehaviour
     {
         ShowGun();
         UpdateAnimator();
+        Shoot();
     }
 
     private void UpdateAnimator()
@@ -65,9 +71,18 @@ public class ShowWeapon : MonoBehaviour
 
     private void Shoot()
     {
-        if(Input.GetButton("Fire1"))
+        if(Input.GetButtonDown("Fire1") && showPistol == true)
         {
-            gunShot.Play();
+            RaycastHit enemyHit;
+            Physics.Raycast(playerShootingPoint.position, playerShootingPoint.TransformDirection(Vector3.forward), out enemyHit, 2);
+
+            if(enemyHit.transform.tag.Equals("Player") && Time.time > nextFire)
+            {
+                enemyHealthSystem.currentHP -= 20;
+                nextFire = Time.time + fireRate;
+                gunShot.Play();
+            }
+            
         }
     }
 }

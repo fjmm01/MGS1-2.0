@@ -9,7 +9,7 @@ public class State : EnemyObservable
 
     public enum STATE
     {
-        IDLE,PATROL,PURSUE,ATTACK
+        IDLE,PATROL,PURSUE,ATTACK,DEATH
     };
     public enum EVENT
     {
@@ -27,6 +27,8 @@ public class State : EnemyObservable
     RaycastHit hitPlayer;
     protected Transform shootingPoint;
     protected PlayerHealthSystem playerhealth;
+    public AI aiBrain;
+    public EnemyHealthSystem enemyHealth;
     
     
 
@@ -38,7 +40,7 @@ public class State : EnemyObservable
     public float nextFire;
 
    
-    public State(GameObject _npc,NavMeshAgent _agent, Animator _anim, Transform _player, Transform _shootingPoint, PlayerHealthSystem _playerhealth)
+    public State(GameObject _npc,NavMeshAgent _agent, Animator _anim, Transform _player, Transform _shootingPoint, PlayerHealthSystem _playerhealth, AI _aibrain, EnemyHealthSystem _enemyHealth)
     {
         npc = _npc;
         agent = _agent;
@@ -47,8 +49,11 @@ public class State : EnemyObservable
         player = _player;
         shootingPoint = _shootingPoint;
         playerhealth = _playerhealth;
+        aiBrain = _aibrain;
+        enemyHealth = _enemyHealth;
         
     }
+
 
     public virtual void Enter() { stage = EVENT.UPDATE; }
     public virtual void Update() { stage = EVENT.UPDATE; }
@@ -98,8 +103,8 @@ public class State : EnemyObservable
 
 public class Idle: State
 {
-    public Idle(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player, Transform _shootingPoint, PlayerHealthSystem _playerHealth)
-                :base(_npc,_agent,_anim,_player,_shootingPoint, _playerHealth)
+    public Idle(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player, Transform _shootingPoint, PlayerHealthSystem _playerHealth, AI _aibrain, EnemyHealthSystem _enemyHealth)
+                :base(_npc,_agent,_anim,_player,_shootingPoint, _playerHealth, _aibrain,_enemyHealth)
     {
         name = STATE.IDLE;
     }
@@ -117,12 +122,12 @@ public class Idle: State
         {
             if(CanSeePlayer())
             {
-                nextState = new Pursue(npc, agent, anim, player, shootingPoint, playerhealth);
+                nextState = new Pursue(npc, agent, anim, player, shootingPoint, playerhealth, aiBrain, enemyHealth);
                 stage = EVENT.EXIT;
             }
             else if(Random.Range(0,100) < 10)
             {
-                nextState = new Patrol(npc, agent, anim, player, shootingPoint, playerhealth);
+                nextState = new Patrol(npc, agent, anim, player, shootingPoint, playerhealth, aiBrain, enemyHealth);
                 stage = EVENT.EXIT;
             }
         }
@@ -138,8 +143,8 @@ public class Idle: State
 public class Patrol: State
 {
     int currentIndex = -1;
-    public Patrol(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player, Transform _shootingPoint, PlayerHealthSystem _playerHealth)
-            : base(_npc, _agent, _anim, _player, _shootingPoint, _playerHealth)
+    public Patrol(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player, Transform _shootingPoint, PlayerHealthSystem _playerHealth, AI _aibrain, EnemyHealthSystem _enemyHealth)
+            : base(_npc, _agent, _anim, _player, _shootingPoint, _playerHealth, _aibrain, _enemyHealth)
     {
         name = STATE.PATROL;
         agent.speed = 1;
@@ -179,7 +184,7 @@ public class Patrol: State
 
             if (CanSeePlayer())
             {
-                nextState = new Pursue(npc, agent, anim, player, shootingPoint, playerhealth);
+                nextState = new Pursue(npc, agent, anim, player, shootingPoint, playerhealth, aiBrain, enemyHealth);
                 stage = EVENT.EXIT;
             }
         }
@@ -194,8 +199,8 @@ public class Patrol: State
 
 public class Pursue: State
 {
-    public Pursue(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player, Transform _shootingPoint, PlayerHealthSystem _playerHealth)
-            : base(_npc, _agent, _anim, _player, _shootingPoint, _playerHealth)
+    public Pursue(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player, Transform _shootingPoint, PlayerHealthSystem _playerHealth, AI _aibrain, EnemyHealthSystem _enemyHealth)
+            : base(_npc, _agent, _anim, _player, _shootingPoint, _playerHealth, _aibrain, _enemyHealth)
     {
         name=STATE.PURSUE;
         agent.speed = 3;
@@ -216,12 +221,12 @@ public class Pursue: State
             {
                 if(CanAttackPlayer())
                 {
-                    nextState = new Attack(npc, agent, anim, player,shootingPoint, playerhealth);
+                    nextState = new Attack(npc, agent, anim, player,shootingPoint, playerhealth, aiBrain, enemyHealth);
                     stage = EVENT.EXIT; 
                 }
                 else if(!CanSeePlayer())
                 {
-                    nextState = new Patrol(npc, agent, anim, player, shootingPoint, playerhealth);
+                    nextState = new Patrol(npc, agent, anim, player, shootingPoint, playerhealth, aiBrain, enemyHealth);
                     stage = EVENT.EXIT;
                 }
             }
@@ -242,8 +247,8 @@ public class Attack : State
 
     bool toggle = false;
 
-    public Attack(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player, Transform _shootingPoint, PlayerHealthSystem _playerHealth)
-            : base(_npc, _agent, _anim, _player,_shootingPoint, _playerHealth)
+    public Attack(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player, Transform _shootingPoint, PlayerHealthSystem _playerHealth, AI _aibrain, EnemyHealthSystem _enemyHealth)
+            : base(_npc, _agent, _anim, _player,_shootingPoint, _playerHealth, _aibrain, _enemyHealth)
     {
         name = STATE.ATTACK;
         shoot = _npc.GetComponent<AudioSource>();
@@ -274,7 +279,7 @@ public class Attack : State
 
             if(!CanAttackPlayer())
             {
-                nextState = new Idle(npc, agent, anim, player, shootingPoint, playerhealth);
+                nextState = new Idle(npc, agent, anim, player, shootingPoint, playerhealth, aiBrain, enemyHealth);
                 stage = EVENT.EXIT;
             }
 
@@ -293,18 +298,23 @@ public class Attack : State
                 {
                     Notify(5);
 
-                    OnNotifyAI = true;
-                    StartCoroutine(NotifyToggleIE());
+                    //OnNotifyAI = true;
+                    aiBrain.StartCoroutine(aiBrain.NotifyToggleIE());
                 }
 
 
                  //Debug.Log("TE HE DADO");
                  if (playerhealth.CurrentHP == 0f)
                  {
-                    nextState = new Idle(npc, agent, anim, player, shootingPoint, playerhealth);
+                    nextState = new Idle(npc, agent, anim, player, shootingPoint, playerhealth, aiBrain, enemyHealth);
                     stage = EVENT.EXIT;
                  }
 
+            }
+            if(enemyHealth.currentHP == 0f)
+            {
+                nextState = new Death(npc, agent, anim, player, shootingPoint, playerhealth, aiBrain, enemyHealth);
+                stage = EVENT.EXIT;
             }
         }       
     }
@@ -317,6 +327,35 @@ public class Attack : State
 
         anim.ResetTrigger("isShooting");
         shoot.Stop();
+        base.Exit();
+    }
+
+    
+}
+public class Death : State
+{
+    public Death(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player, Transform _shootingPoint, PlayerHealthSystem _playerHealth, AI _aibrain, EnemyHealthSystem _enemyHealth)
+           : base(_npc, _agent, _anim, _player, _shootingPoint, _playerHealth, _aibrain, _enemyHealth)
+    {
+        name = STATE.DEATH;
+        agent.speed = 0;
+        agent.isStopped = true;
+    }
+    public override void Enter()
+    {
+        anim.SetTrigger("isSleeping");
+        base.Enter();
+    }
+
+    public override void Update()
+    {
+
+        Destroy(npc, 1);
+    }
+
+    public override void Exit()
+    {
+        anim.ResetTrigger("isSleeping");
         base.Exit();
     }
 }

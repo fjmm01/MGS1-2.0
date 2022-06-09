@@ -12,6 +12,8 @@ public class AI : MonoBehaviour, IObserver<bool>
     State currentState;
     public Transform shootingPoint;
     public PlayerHealthSystem playerHealth;
+    public AI aiBrain;
+    public EnemyHealthSystem enemyHealth;
     
     
 
@@ -26,7 +28,7 @@ public class AI : MonoBehaviour, IObserver<bool>
         EnemyObservable.EnemyCallbackAction += UpdateObserver;
         agent = this.GetComponent<NavMeshAgent>();
         anim = this.GetComponent<Animator>();
-        currentState = new Idle(this.gameObject, agent, anim, player,shootingPoint, playerHealth);
+        currentState = new Idle(this.gameObject, agent, anim, player,shootingPoint, playerHealth,this.aiBrain,enemyHealth);
     }
 
     // Update is called once per frame
@@ -38,7 +40,7 @@ public class AI : MonoBehaviour, IObserver<bool>
 
     public void UpdateObserver(bool value)
     {
-        currentState = new Pursue(this.gameObject, agent, anim, player, shootingPoint, playerHealth);
+        currentState = new Pursue(this.gameObject, agent, anim, player, shootingPoint, playerHealth, this.aiBrain, enemyHealth);
         StartCoroutine(NotifyToggleIE());
 
         Debug.Log("***** Me han llamado para perseguir al jugador. " + name);
