@@ -2124,7 +2124,6 @@ GameObject:
   - component: {fileID: 8676859005578919905}
   - component: {fileID: 1648430208786272923}
   - component: {fileID: 1377064016270956331}
-  - component: {fileID: 1377064016270956327}
   - component: {fileID: 1377064016270956330}
   m_Layer: 0
   m_Name: Ugg
@@ -2272,19 +2271,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1377064016270956327
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5634351214200671730}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 372a734fe6bafb24791bdf5626e4fe42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 0}
 --- !u!195 &1377064016270956330
 NavMeshAgent:
   m_ObjectHideFlags: 0

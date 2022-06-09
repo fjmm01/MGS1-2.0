@@ -27,6 +27,8 @@ public class State : EnemyObservable
     RaycastHit hitPlayer;
     protected Transform shootingPoint;
     protected PlayerHealthSystem playerhealth;
+    
+    
 
     float visDist = 10.0f;
     float visAngle = 180.0f;
@@ -45,8 +47,7 @@ public class State : EnemyObservable
         player = _player;
         shootingPoint = _shootingPoint;
         playerhealth = _playerhealth;
-
-        EnemyCallbackAction += Notify;
+        
     }
 
     public virtual void Enter() { stage = EVENT.UPDATE; }
@@ -88,14 +89,10 @@ public class State : EnemyObservable
         return false;
     }
 
-    public override void Notify(bool value)
+    public override void Notify(float value)
     {
-        // Llamo al estado Persue
-
-        nextState = new Pursue(npc, agent, anim, player, shootingPoint, playerhealth);
-        stage = EVENT.EXIT;
-
-        Debug.Log("***** Me han llamado para perseguir al jugador. " + name);
+        PlayerHealthSystem.UpdateHPAction.Invoke(value);
+        EnemyCallbackAction.Invoke(true);
     }
 }
 
@@ -116,16 +113,18 @@ public class Idle: State
 
     public override void Update()
     {
-
-        if(CanSeePlayer())
+        if(!OnNotifyAI)
         {
-            nextState = new Pursue(npc, agent, anim, player, shootingPoint, playerhealth);
-            stage = EVENT.EXIT;
-        }
-        else if(Random.Range(0,100) < 10)
-        {
-            nextState = new Patrol(npc, agent, anim, player, shootingPoint, playerhealth);
-            stage = EVENT.EXIT;
+            if(CanSeePlayer())
+            {
+                nextState = new Pursue(npc, agent, anim, player, shootingPoint, playerhealth);
+                stage = EVENT.EXIT;
+            }
+            else if(Random.Range(0,100) < 10)
+            {
+                nextState = new Patrol(npc, agent, anim, player, shootingPoint, playerhealth);
+                stage = EVENT.EXIT;
+            }
         }
         
     }
@@ -166,25 +165,24 @@ public class Patrol: State
 
     public override void Update()
     {
-
-        
-        if(agent.remainingDistance < 1)
+        if(!OnNotifyAI)
         {
-            if (currentIndex >= GameEnvironment.Singleton.CheckPoints.Count - 1)
-                currentIndex = 0;
-            else
-                currentIndex++;
+            if(agent.remainingDistance < 1)
+            {
+                if (currentIndex >= GameEnvironment.Singleton.CheckPoints.Count - 1)
+                    currentIndex = 0;
+                else
+                    currentIndex++;
 
-            agent.SetDestination(GameEnvironment.Singleton.CheckPoints[currentIndex].transform.position);
+                agent.SetDestination(GameEnvironment.Singleton.CheckPoints[currentIndex].transform.position);
+            }
+
+            if (CanSeePlayer())
+            {
+                nextState = new Pursue(npc, agent, anim, player, shootingPoint, playerhealth);
+                stage = EVENT.EXIT;
+            }
         }
-
-        if (CanSeePlayer())
-        {
-            nextState = new Pursue(npc, agent, anim, player, shootingPoint, playerhealth);
-            stage = EVENT.EXIT;
-        }
-
-
     }
 
     public override void Exit()
@@ -210,18 +208,22 @@ public class Pursue: State
     }
     public override void Update()
     {
-        agent.SetDestination(player.position);
-        if(agent.hasPath)
+
+        if(!OnNotifyAI)
         {
-            if(CanAttackPlayer())
+            agent.SetDestination(player.position);
+            if(agent.hasPath)
             {
-                nextState = new Attack(npc, agent, anim, player,shootingPoint, playerhealth);
-                stage = EVENT.EXIT; 
-            }
-            else if(!CanSeePlayer())
-            {
-                nextState = new Patrol(npc, agent, anim, player, shootingPoint, playerhealth);
-                stage = EVENT.EXIT;
+                if(CanAttackPlayer())
+                {
+                    nextState = new Attack(npc, agent, anim, player,shootingPoint, playerhealth);
+                    stage = EVENT.EXIT; 
+                }
+                else if(!CanSeePlayer())
+                {
+                    nextState = new Patrol(npc, agent, anim, player, shootingPoint, playerhealth);
+                    stage = EVENT.EXIT;
+                }
             }
         }
     }
@@ -233,7 +235,7 @@ public class Pursue: State
     }
 }
 
-public class Attack : State, IObservable<float>
+public class Attack : State
 {
     float rotationSpeed = 2;
     AudioSource shoot;
@@ -258,50 +260,56 @@ public class Attack : State, IObservable<float>
 
     public override void Update()
     {
-        Vector3 direction = player.position - npc.transform.position;
-        float angle = Vector3.Angle(direction, npc.transform.forward);
-        direction.y = 0;
-        
-        
 
-        
-        npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * rotationSpeed);
-
-        if(!CanAttackPlayer())
+        if(!OnNotifyAI)
         {
-            nextState = new Idle(npc, agent, anim, player, shootingPoint, playerhealth);
-            stage = EVENT.EXIT;
-        }
+            Vector3 direction = player.position - npc.transform.position;
+            float angle = Vector3.Angle(direction, npc.transform.forward);
+            direction.y = 0;
+        
+        
 
-        RaycastHit bullet;
+        
+            npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * rotationSpeed);
+
+            if(!CanAttackPlayer())
+            {
+                nextState = new Idle(npc, agent, anim, player, shootingPoint, playerhealth);
+                stage = EVENT.EXIT;
+            }
+
+            RaycastHit bullet;
 
 
        
-        Physics.Raycast(shootingPoint.transform.position, direction, out bullet);
-        if (bullet.transform.tag.Equals("Player") && Time.time > nextFire)
-        {
-            nextFire = Time.time + fireRate;
-
-            //playerhealth.currentHP -= 5;
-
-            if(!toggle)
+            Physics.Raycast(shootingPoint.transform.position, direction, out bullet);
+            if (bullet.transform.tag.Equals("Player") && Time.time > nextFire)
             {
-                Notify(5);
-                toggle = true;
+                nextFire = Time.time + fireRate;
+
+                //playerhealth.currentHP -= 5;
+
+                if(!OnNotifyAI)
+                {
+                    Notify(5);
+
+                    OnNotifyAI = true;
+                    StartCoroutine(NotifyToggleIE());
+                }
+
+
+                 //Debug.Log("TE HE DADO");
+                 if (playerhealth.CurrentHP == 0f)
+                 {
+                    nextState = new Idle(npc, agent, anim, player, shootingPoint, playerhealth);
+                    stage = EVENT.EXIT;
+                 }
+
             }
-
-
-             //Debug.Log("TE HE DADO");
-             if (playerhealth.CurrentHP == 0f)
-             {
-                nextState = new Idle(npc, agent, anim, player, shootingPoint, playerhealth);
-                stage = EVENT.EXIT;
-             }
-
-        }
-
-         
+        }       
     }
+
+    
 
     public override void Exit()
     {
@@ -310,11 +318,5 @@ public class Attack : State, IObservable<float>
         anim.ResetTrigger("isShooting");
         shoot.Stop();
         base.Exit();
-    }
-
-    public void Notify(float value)
-    {
-        PlayerHealthSystem.UpdateHPAction.Invoke(value);
-        EnemyCallbackAction.Invoke(true);
     }
 }

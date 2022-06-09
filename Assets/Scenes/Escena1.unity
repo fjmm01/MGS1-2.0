@@ -3392,6 +3392,28 @@ Transform:
   m_Father: {fileID: 716156481}
   m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &229450260 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5634351214200671730, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
+  m_PrefabInstance: {fileID: 1601535020}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &229450261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 229450260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 372a734fe6bafb24791bdf5626e4fe42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1629781334}
+  shootingPoint: {fileID: 1612750167}
+  playerHealth: {fileID: 1629781339}
+  aiBrain: {fileID: 229450261}
+  OnNotifyAI: 0
 --- !u!1 &229598420
 GameObject:
   m_ObjectHideFlags: 0
@@ -8655,8 +8677,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 732733562}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 94.64015, y: 13.255716, z: -87.54717}
+  m_LocalRotation: {x: -0.000000037802558, y: 0.74272704, z: -0.66959435, w: -0.000000041931333}
+  m_LocalPosition: {x: 94.64001, y: 31.152515, z: -88.00714}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -21377,6 +21399,28 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &1309736951 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5634351214200671730, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
+  m_PrefabInstance: {fileID: 1377064016072416432}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1309736952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1309736951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 372a734fe6bafb24791bdf5626e4fe42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1629781334}
+  shootingPoint: {fileID: 1009483116}
+  playerHealth: {fileID: 1629781339}
+  aiBrain: {fileID: 1309736952}
+  OnNotifyAI: 0
 --- !u!43 &1319588765
 Mesh:
   m_ObjectHideFlags: 0
@@ -23827,38 +23871,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1377064016270956327, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
-      propertyPath: player
-      value: 
-      objectReference: {fileID: 1629781334}
-    - target: {fileID: 1377064016270956327, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
-      propertyPath: playerHealth
-      value: 
-      objectReference: {fileID: 1629781339}
-    - target: {fileID: 1377064016270956327, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
-      propertyPath: shootingPoint
-      value: 
-      objectReference: {fileID: 1612750167}
-    - target: {fileID: 1377064016270956327, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
-      propertyPath: Ruta.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1377064016270956327, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
-      propertyPath: Ruta.Array.data[0]
-      value: 
-      objectReference: {fileID: 1676317963}
-    - target: {fileID: 1377064016270956327, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
-      propertyPath: Ruta.Array.data[1]
-      value: 
-      objectReference: {fileID: 1670386410}
-    - target: {fileID: 1377064016270956327, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
-      propertyPath: Ruta.Array.data[2]
-      value: 
-      objectReference: {fileID: 1135894333}
-    - target: {fileID: 1377064016270956327, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
-      propertyPath: Ruta.Array.data[3]
-      value: 
-      objectReference: {fileID: 1034535487}
     - target: {fileID: 5634351214200671730, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
       propertyPath: m_Name
       value: Ugg (2)
@@ -23885,7 +23897,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8676859005578919905, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -88.122
+      value: -120.2
       objectReference: {fileID: 0}
     - target: {fileID: 8676859005578919905, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
       propertyPath: m_LocalRotation.w
@@ -23915,7 +23927,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
 --- !u!4 &1608030257 stripped
 Transform:
@@ -36697,38 +36710,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1377064016270956327, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
-      propertyPath: player
-      value: 
-      objectReference: {fileID: 1629781334}
-    - target: {fileID: 1377064016270956327, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
-      propertyPath: playerHealth
-      value: 
-      objectReference: {fileID: 1629781339}
-    - target: {fileID: 1377064016270956327, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
-      propertyPath: shootingPoint
-      value: 
-      objectReference: {fileID: 1009483116}
-    - target: {fileID: 1377064016270956327, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
-      propertyPath: Ruta.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1377064016270956327, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
-      propertyPath: Ruta.Array.data[0]
-      value: 
-      objectReference: {fileID: 1676317963}
-    - target: {fileID: 1377064016270956327, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
-      propertyPath: Ruta.Array.data[1]
-      value: 
-      objectReference: {fileID: 1670386410}
-    - target: {fileID: 1377064016270956327, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
-      propertyPath: Ruta.Array.data[2]
-      value: 
-      objectReference: {fileID: 1135894333}
-    - target: {fileID: 1377064016270956327, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
-      propertyPath: Ruta.Array.data[3]
-      value: 
-      objectReference: {fileID: 1034535487}
     - target: {fileID: 5634351214200671730, guid: d635862997a0d344c8e5c8a19e7ea0c1, type: 3}
       propertyPath: m_Name
       value: Ugg
